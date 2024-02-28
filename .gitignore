@@ -1,3 +1,7 @@
 venv
 __pycache__
 proj*
+*.pdf
+*.docx
+*.code-workspace
+*.vscode/
