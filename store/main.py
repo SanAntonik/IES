@@ -180,8 +180,10 @@ def read_processed_agent_data(processed_agent_data_id: int):
 
 @app.get("/processed_agent_data/", response_model=list[ProcessedAgentDataInDB])
 def list_processed_agent_data():
-    # Get list of data
-    pass
+    print("GET ALL")
+    with SessionLocal() as session:
+        result = session.query(processed_agent_data).all()
+    return result
 
 
 @app.put(
