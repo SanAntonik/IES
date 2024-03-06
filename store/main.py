@@ -222,8 +222,26 @@ def update_processed_agent_data(processed_agent_data_id: int, data: ProcessedAge
     response_model=ProcessedAgentDataInDB,
 )
 def delete_processed_agent_data(processed_agent_data_id: int):
-    # Delete by id
-    pass
+    print("DELETE")
+    print("allalaalal")
+    print(type(processed_agent_data_id))
+    print(f"ID equals to {processed_agent_data_id}")
+    print("fuckijkljkljkljng jshijlkt")
+    with SessionLocal() as session:
+        print(1)
+        query = (
+            processed_agent_data.delete()
+            .where(processed_agent_data.c.id == processed_agent_data_id)
+            .returning(*processed_agent_data.columns)
+        )
+        print(2)
+        result = session.execute(query)
+        print(3)
+        deleted_data = result.fetchone()
+        session.commit()
+        if deleted_data is None:
+            raise HTTPException(status_code=404, detail="Item not found")
+        return deleted_data
 
 
 if __name__ == "__main__":
