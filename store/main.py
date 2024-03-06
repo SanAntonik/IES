@@ -192,7 +192,29 @@ def list_processed_agent_data():
 )
 def update_processed_agent_data(processed_agent_data_id: int, data: ProcessedAgentData):
     # Update data
-    pass
+    print("UPDATE")
+    with SessionLocal() as session:
+        query = (
+            processed_agent_data.update()
+            .where(processed_agent_data.c.id == processed_agent_data_id)
+            .values(
+                road_state=data.road_state,
+                user_id=data.agent_data.user_id,
+                x=data.agent_data.accelerometer.x,
+                y=data.agent_data.accelerometer.y,
+                z=data.agent_data.accelerometer.z,
+                latitude=data.agent_data.gps.latitude,
+                longitude=data.agent_data.gps.longitude,
+                timestamp=data.agent_data.timestamp,
+            )
+            .returning(*processed_agent_data.columns)
+        )
+        result = session.execute(query)
+        updated_data = result.fetchone()
+        session.commit()
+        if updated_data is None:
+            raise HTTPException(status_code=404, detail="Item not found")
+        return updated_data
 
 
 @app.delete(
