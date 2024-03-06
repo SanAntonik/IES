@@ -161,7 +161,21 @@ async def create_processed_agent_data(data: List[ProcessedAgentData]):
 )
 def read_processed_agent_data(processed_agent_data_id: int):
     # Get data by id
-    pass
+    print("GET BY ID")
+    print("allalaalal")
+    print(type(processed_agent_data_id))
+    print(f"ID equals to {processed_agent_data_id}")
+    print("fuckijkljkljkljng jshijlkt")
+    with SessionLocal() as session:
+        result = (
+            session.query(processed_agent_data)
+            .filter(processed_agent_data.c.id == processed_agent_data_id)
+            .first()
+        )
+        print(result)
+        if result is None:
+            raise HTTPException(status_code=404, detail="Item not found")
+    return result
 
 
 @app.get("/processed_agent_data/", response_model=list[ProcessedAgentDataInDB])
