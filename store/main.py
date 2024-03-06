@@ -127,8 +127,32 @@ async def send_data_to_subscribers(user_id: int, data):
 @app.post("/processed_agent_data/")
 async def create_processed_agent_data(data: List[ProcessedAgentData]):
     # Insert data to database
-    # Send data to subscribers
-    pass
+    print("POST")
+    # print(ProcessedAgentDataInDB)
+    # print(list[ProcessedAgentDataInDB])
+    # print(SessionLocal())
+    # print(processed_agent_data)
+    # print(POSTGRES_HOST, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB)
+    # print(data)
+    # print("fjsklfjdsl")
+    with SessionLocal() as session:
+        for item in data:
+            new_item = processed_agent_data.insert().values(
+                road_state=item.road_state,
+                user_id=item.agent_data.user_id,
+                x=item.agent_data.accelerometer.x,
+                y=item.agent_data.accelerometer.y,
+                z=item.agent_data.accelerometer.z,
+                latitude=item.agent_data.gps.latitude,
+                longitude=item.agent_data.gps.longitude,
+                timestamp=item.agent_data.timestamp,
+            )
+            # print()
+            # print(item.road_state, item.agent_data.accelerometer.x)
+            # print()
+            session.execute(new_item)
+            session.commit()
+            await send_data_to_subscribers(item.agent_data.user_id, item.json())
 
 
 @app.get(
