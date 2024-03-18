@@ -1,7 +1,6 @@
 venv
 app.log
-mosquitto/data
-mosquitto/log
+mosquitto.*
 __pycache__
 proj*
 *.pdf
