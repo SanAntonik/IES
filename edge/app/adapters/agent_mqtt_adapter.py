@@ -39,6 +39,9 @@ class AgentMQTTAdapter(AgentGateway):
             agent_data = AgentData.model_validate_json(payload, strict=True)
             # Process the received data (you can call a use case here if needed)
             processed_data = process_agent_data(agent_data)
+            road_state = processed_data.road_state
+            z_value = agent_data.accelerometer.z
+            logging.info(f"\n\nLab 4 Condition check: z > 10,000\nz_value={z_value}\nThus, road_state={road_state}\n")
             # Store the agent_data in the database (you can send it to the data processing module)
             if not self.hub_gateway.save_data(processed_data):
                 logging.error("Hub is not available")
